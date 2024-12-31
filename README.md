@@ -8,7 +8,7 @@ SDL2\
 SDL2_image\
 SDL2_mixer\
 SDL2_ttf\
-gml\
+gml
 
 These must be downloaded and installed globally (there's a bunch of header in the `/libs` that I need to remove but will do as project grows).
 
