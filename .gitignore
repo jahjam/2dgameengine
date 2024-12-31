@@ -1,0 +1,16 @@
+# dirs
+build
+CMakeFiles
+.cache
+bin
+
+#files
+CMakeCache.*
+cmake_install.*
+Makefile
+Main
+2dgameengine.*
+myeasylog.*
+CMakeLists.txt.*
+compile_commands.json
+libGame.*
