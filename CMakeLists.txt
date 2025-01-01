@@ -16,6 +16,12 @@ add_subdirectory(src/Game)
 
 add_executable(2dgameengine src/Main.cpp)
 
+# this sets specific paths where things happen
+# 1)  one is where to place the final executable
+# 2 ) the second is defining the working directory which
+#     will be used when building the project
+#     (meaning every path you write will begin
+#      from the project root not the relative file)
 set_target_properties(2dgameengine PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin  
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}    
