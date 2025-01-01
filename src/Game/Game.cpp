@@ -49,7 +49,6 @@ void Game::render() {
 
   // Draw a PNG texture
   SDL_Surface *surface = IMG_Load("./assets/images/truck-ford-right.png");
-  // SDL_Surface *surface = IMG_Load("assets/images/tank-tiger-right.png");
   if (!surface) {
     LOG(ERROR) << "IMG_Load failed!";
     this->isRunning = false;
