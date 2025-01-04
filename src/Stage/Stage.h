@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef STAGE_H
+#define STAGE_H
 #include <SDL2/SDL.h>
 
 #define FPS 60
@@ -7,7 +7,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-class Game {
+class Stage {
 private:
   SDL_Window *window;
   SDL_Renderer *renderer;
@@ -15,8 +15,8 @@ private:
   int msPreviousFrame = 0;
 
 public:
-  Game();
-  ~Game();
+  Stage();
+  ~Stage();
   void initialise();
   void destroy();
   void processInput();
@@ -26,4 +26,4 @@ public:
   void run();
 };
 
-#endif // GAME_H
+#endif // STAGE_H

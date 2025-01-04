@@ -1,4 +1,4 @@
-#include "Game/Game.h"
+#include "Stage/Stage.h"
 #include "easylogging++.h"
 
 // This is to initialise the logger
@@ -7,11 +7,11 @@ INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char *argv[]) {
   el::Loggers::addFlag(el::LoggingFlag::ColoredTerminalOutput);
-  Game game;
+  Stage stage;
 
-  game.initialise();
-  game.run();
-  game.destroy();
+  stage.initialise();
+  stage.run();
+  stage.destroy();
 
   return 0;
 }
