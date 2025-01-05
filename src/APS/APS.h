@@ -16,6 +16,8 @@
 // if they don't have those they can't use the StarWarsScript
 const uint32_t MAX_PROPS = 32;
 typedef std::bitset<MAX_PROPS> ScriptRequirements;
+
+// Typedefs
 typedef size_t Name;
 
 //
