@@ -13,7 +13,7 @@ template <typename T> void Script::requireProp() {
 // Prop
 //
 
-template <typename T> uint32_t Prop<T>::getName() {
+template <typename T> Name Prop<T>::getName() {
   static auto name = nameCounter++;
   return name;
 }
@@ -22,7 +22,7 @@ template <typename T> uint32_t Prop<T>::getName() {
 // Director
 //
 
-bool propHasNoStore(uint32_t &propName, std::vector<IStore *> &propStores) {
+bool propHasNoStore(Name &propName, std::vector<IStore *> &propStores) {
   return propName >= propStores.size() || !propStores[propName];
 };
 

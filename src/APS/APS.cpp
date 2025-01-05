@@ -3,13 +3,13 @@
 #include <algorithm>
 #include <utility>
 
-uint32_t IProp::nameCounter = 0;
+Name IProp::nameCounter = 0;
 
 //
 // ACTOR
 //
 //
-uint32_t Actor::getName() const { return this->name; };
+Name Actor::getName() const { return this->name; };
 
 //
 // SCRIPT
@@ -39,7 +39,7 @@ const ScriptRequirements &Script::getScriptRequirements() const {
 //
 
 Actor Director::hireActor() {
-  uint32_t actorName = this->numActors++;
+  Name actorName = this->numActors++;
 
   Actor actor = Actor(actorName);
 

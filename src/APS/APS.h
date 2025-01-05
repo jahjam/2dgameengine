@@ -16,6 +16,7 @@
 // if they don't have those they can't use the StarWarsScript
 const uint32_t MAX_PROPS = 32;
 typedef std::bitset<MAX_PROPS> ScriptRequirements;
+typedef size_t Name;
 
 //
 // Prop
@@ -23,11 +24,11 @@ typedef std::bitset<MAX_PROPS> ScriptRequirements;
 
 struct IProp {
 protected:
-  static uint32_t nameCounter;
+  static Name nameCounter;
 };
 
 template <typename T> class Prop : public IProp {
-  static uint32_t getName();
+  static Name getName();
 };
 
 //
@@ -36,13 +37,13 @@ template <typename T> class Prop : public IProp {
 
 class Actor {
 private:
-  uint32_t name;
+  Name name;
 
 public:
-  Actor(uint32_t name) : name(name) {};
-  uint32_t getName() const;
+  Actor(Name name) : name(name) {};
+  Name getName() const;
 
-  bool operator==(uint32_t otherName) const { return this->name == otherName; }
+  bool operator==(Name otherName) const { return this->name == otherName; }
   bool operator<(const Actor &otherActor) const {
     return this->name < otherActor.name;
   }
@@ -94,10 +95,10 @@ public:
   void clear() { propVarients.clear(); }
   void add(T prop) { propVarients.push_back(prop); }
   void set(size_t i, T prop) { propVarients[i] = prop; }
-  void remove(uint32_t actorName) {
+  void remove(Name actorName) {
     propVarients.erase(propVarients.begin() + actorName);
   }
-  T &operator[](uint32_t i) { return propVarients[i]; }
+  T &operator[](size_t i) { return propVarients[i]; }
 };
 
 //
@@ -106,12 +107,12 @@ public:
 
 class Director {
 private:
-  uint32_t numActors = 0;
+  size_t numActors = 0;
 
   // Each store contains all the varients of a certain prop type
   // ie:
   // [key = propName], [value = actorName]
-  std::unordered_map<uint32_t, IStore *> propStores;
+  std::unordered_map<Name, IStore *> propStores;
 
   // The ScriptRequirements let us know which props an actor possesses
   // [vector index = actorName]
