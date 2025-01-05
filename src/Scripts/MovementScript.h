@@ -1,9 +1,7 @@
 #ifndef MOVEMENTSCRIPT_H
 #define MOVEMENTSCRIPT_H
 
-#include "APS.h"
-
-class MovementScript : public Script {
+class MovementScript {
 public:
   MovementScript() {}
 

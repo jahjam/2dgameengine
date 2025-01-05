@@ -1,5 +1,6 @@
 #ifndef STAGE_H
 #define STAGE_H
+#include "APS.h"
 #include <SDL2/SDL.h>
 
 #define FPS 60
@@ -13,6 +14,8 @@ private:
   SDL_Renderer *renderer;
   bool isRunning;
   int msPreviousFrame = 0;
+
+  Director *director;
 
 public:
   Stage();

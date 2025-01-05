@@ -1,4 +1,4 @@
-add_library(APS APS.cpp APS.tpp)
+add_library(APS APS.h APS.cpp APS.tpp)
 
 target_link_libraries(APS PUBLIC EasyLogging)
 

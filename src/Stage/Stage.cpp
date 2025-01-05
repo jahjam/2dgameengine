@@ -5,10 +5,11 @@
 
 Stage::Stage() {
   this->isRunning = false;
+  this->director = new Director();
   LOG(INFO) << "Game constructor called";
 }
 
-Stage::~Stage() { LOG(ERROR) << "Game destructor called"; }
+Stage::~Stage() { LOG(INFO) << "Game destructor called"; }
 
 void Stage::initialise() {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -45,13 +46,11 @@ void Stage::render() {
   SDL_SetRenderDrawColor(this->renderer, 21, 21, 21, 255);
   SDL_RenderClear(this->renderer);
 
-  // TODO:
-  // Render some actors
-
   SDL_RenderPresent(this->renderer);
 }
 
 void Stage::run() {
+  this->setup();
   while (this->isRunning) {
     this->processInput();
     this->update();
@@ -60,8 +59,7 @@ void Stage::run() {
 }
 
 void Stage::setup() {
-  // TODO:
-  // Actor tank = director.CreateActor();
+  Actor tank = this->director->hireActor();
   // tank.addProp<TransformProp>();
   // tank.addProp<BoxColliderProp>();
   // tank.addProp<SpriteComponent>("./assets/images/tank");
