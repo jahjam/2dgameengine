@@ -1,4 +1,5 @@
 #include "Stage.h"
+#include "TransformProp.h"
 #include "easylogging++.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -59,7 +60,12 @@ void Stage::run() {
 }
 
 void Stage::setup() {
+  TransformProp transform = TransformProp();
   Actor tank = this->director->hireActor();
+  this->director->giveProp("TransformProp", tank.getName(), transform);
+  Actor truck = this->director->hireActor();
+  this->director->giveProp("TransformProp", truck.getName(), transform);
+
   // tank.addProp<TransformProp>();
   // tank.addProp<BoxColliderProp>();
   // tank.addProp<SpriteComponent>("./assets/images/tank");
