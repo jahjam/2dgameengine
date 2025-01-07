@@ -20,7 +20,7 @@ run: `cd build`
 
 To build cmake\
 run: `cmake ..`\
-from the project root
+from the build dir
 
 then run: `make`
 
