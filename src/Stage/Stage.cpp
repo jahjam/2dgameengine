@@ -60,11 +60,10 @@ void Stage::run() {
 }
 
 void Stage::setup() {
-  TransformProp transform = TransformProp();
   Actor tank = this->director->hireActor();
-  this->director->giveProp("TransformProp", tank.getName(), transform);
+  this->director->giveProp("TransformProp", tank.getName(), TransformProp());
   Actor truck = this->director->hireActor();
-  this->director->giveProp("TransformProp", truck.getName(), transform);
+  this->director->giveProp("TransformProp", truck.getName(), TransformProp());
 
   // tank.addProp<TransformProp>();
   // tank.addProp<BoxColliderProp>();

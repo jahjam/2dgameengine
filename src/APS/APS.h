@@ -3,7 +3,6 @@
 
 #include <bitset>
 #include <cstdint>
-#include <memory>
 #include <set>
 #include <typeindex>
 #include <unordered_map>
@@ -76,7 +75,8 @@ public:
   void removeActorFromScript(Actor actor);
   const std::vector<Actor> &getScriptActors();
   const ScriptRequirements &getScriptRequirements() const;
-
+  virtual void update() = 0;
+  virtual Script *clone() const = 0;
   // To use a script an actor must have
   // specific props and those are set/required
   // in a script here
@@ -92,7 +92,7 @@ public:
   virtual ~IStore() = 0;
   virtual size_t getSize() = 0;
   virtual void resize(size_t num) = 0;
-  virtual void add(IProp *prop, const Name &actorName) = 0;
+  virtual void add(const IProp &prop, const Name &actorName) = 0;
   virtual void remove(const Name &actorName) = 0;
   virtual IProp *get(Name actorName) = 0;
   virtual IProp *operator[](size_t i) = 0;
@@ -108,7 +108,7 @@ public:
   ~Store() override = default;
   size_t getSize() override;
   void resize(size_t num) override;
-  void add(IProp *prop, const Name &actorName) override;
+  void add(const IProp &prop, const Name &actorName) override;
   void remove(const Name &actorName) override;
   IProp *get(Name actorName) override;
 
@@ -132,7 +132,7 @@ private:
   // [vector index = actorName]
   std::vector<ScriptRequirements> actorsProps;
 
-  std::unordered_map<std::type_index, std::shared_ptr<Script>> scripts;
+  std::unordered_map<std::type_index, Script *> scripts;
 
   std::set<Actor> actorsToBeHired;
   std::set<Actor> actorsToBeFired;
@@ -144,16 +144,17 @@ public:
   void direct();
 
   // Prop management
-  void giveProp(const std::string &propName, const Name actorName, Prop &prop);
+  void giveProp(const std::string &propName, const Name actorName,
+                const Prop &prop);
   void removeProp(const std::string &propName, Name propId,
                   const Name &actorName);
   bool hasProp(Name &actorName, Name &propName) const;
-  //
-  //  // Script management
-  //  template <typename T, typename... TArgs> void giveScript(TArgs &&...args);
-  //  template <typename T, typename... TArgs> void removeScript();
-  //  template <typename T> bool hasScript() const;
-  //  template <typename T> T &getScript() const;
+
+  // Script management
+  void giveScript(const Script &script);
+  void removeScript(const Script &script);
+  bool hasScript(const Script &script) const;
+  Script &getScript(const Script &script) const;
 
   void addActorToScript(Actor actor);
 };

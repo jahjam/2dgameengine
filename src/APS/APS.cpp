@@ -52,12 +52,12 @@ const ScriptRequirements &Script::getScriptRequirements() const {
 // STORE
 //
 IStore::~IStore() {}
-void Store::add(IProp *prop, const Name &actorName) {
+void Store::add(const IProp &prop, const Name &actorName) {
   if (actorName >= this->propVarients.size()) {
     this->propVarients.resize(actorName + 1);
   }
 
-  this->propVarients[actorName] = prop->clone();
+  this->propVarients[actorName] = prop.clone();
 }
 IProp *Store::get(Name actorName) { return this->propVarients[actorName]; }
 size_t Store::getSize() { return this->propVarients.size(); };
@@ -75,7 +75,7 @@ bool propHasNoStore(const std::string &propName,
 };
 
 void Director::giveProp(const std::string &propName, const Name actorName,
-                        Prop &prop) {
+                        const Prop &prop) {
 
   if (propHasNoStore(propName, this->propStores)) {
     Store *newPropStore = new Store();
@@ -88,13 +88,12 @@ void Director::giveProp(const std::string &propName, const Name actorName,
     propStore->resize(this->numActors);
   }
 
-  propStore->add(&prop, actorName);
+  propStore->add(prop, actorName);
 
-  std::cout << "Actor:" << actorName << "given prop:" << propName << std::endl;
+  LOG(INFO) << "Actor: " << actorName << "given prop: " << propName;
 
   for (const auto &pair : this->propStores) {
-    std::cout << pair.first << ": " << (*pair.second)[0]->getName()
-              << std::endl;
+    LOG(INFO) << pair.first << ": " << (*pair.second)[0]->getName();
   }
 
   this->actorsProps[actorName].set(prop.getName());
@@ -163,23 +162,20 @@ bool Director::hasProp(Name &actorName, Name &propName) const {
   return this->actorsProps[actorName].test(propName);
 }
 
-// TODO: Make these not icky templates
-//
-// void Director::giveScript(TArgs &&...args) {
-//  T *newScript = new T(std::forward<TArgs>(args)...);
-//  this->scripts.insert({std::type_index(typeid(T)), newScript});
-//}
-//
-// void Director::removeScript() {
-//  this->scripts.erase(std::type_index(typeid(T)));
-//}
-//
-// bool Director::hasScript() const {
-//  return this->scripts.find(std::type_index(typeid(T))) !=
-//  this->scripts.end();
-//}
-//
-// Script &Director::getScript() const {
-//  auto script = this->scripts.find(std::type_index(typeid(T)));
-//  return *(std::static_pointer_cast<T>(script->second));
-//}
+void Director::giveScript(const Script &script) {
+  this->scripts.insert({std::type_index(typeid(script)), script.clone()});
+};
+
+void Director::removeScript(const Script &script) {
+  this->scripts.erase(std::type_index(typeid(script)));
+};
+
+bool Director::hasScript(const Script &script) const {
+  return this->scripts.find(std::type_index(typeid(script))) !=
+         this->scripts.end();
+};
+
+Script &Director::getScript(const Script &script) const {
+  auto foundScript = this->scripts.find(std::type_index(typeid(script)));
+  return *foundScript->second;
+};
