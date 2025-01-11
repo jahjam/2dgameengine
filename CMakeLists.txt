@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Enable the generation of compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# No idea if this is needed but my neovim 
+# never works unless it's included 
+# TODO: needs to figure out why neovim 
+# needs this
 add_custom_target(link_compile_commands ALL
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_BINARY_DIR}/compile_commands.json
