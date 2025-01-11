@@ -35,9 +35,9 @@ TODOS: \
 
 - Come up with a better way to assign Props their unique names
   as currently it's bloating the individual prop classes
-- Make the scripts map in Director take strings are the key
+- Make the scripts map in Director take strings as the key
   and then you can pass constants instead of passing a class
-- Create constant names for each Prop class within each class
+- Create the constant names for each Prop class within each class
   like: string TRANSFORM_CLASS = "TransformClass" to avoid
   typing mistakes
-  -- Not handling cleaning up the prop stores, need to sort that
+- Not handling cleaning up the prop stores, need to sort that
