@@ -1,4 +1,5 @@
 # 2dgameenginec-
+
 A 2D game engine written in c++
 
 Libs you'll need downloaded:\
@@ -25,7 +26,18 @@ from the build dir
 then run: `make`
 
 and to launch from build dir \
-run: `./bin/2dgameengine` 
+run: `./bin/2dgameengine`
 
 Just playing around on linux at the moment and this is the barebones way to build/run this engine.\
-I will expand on it over time (or that's the plan, at least)
+I will expand on it over time (or that's the plan, at least) \
+
+TODOS: \
+
+- Come up with a better way to assign Props their unique names
+  as currently it's bloating the individual prop classes
+- Make the scripts map in Director take strings are the key
+  and then you can pass constants instead of passing a class
+- Create constant names for each Prop class within each class
+  like: string TRANSFORM_CLASS = "TransformClass" to avoid
+  typing mistakes
+  -- Not handling cleaning up the prop stores, need to sort that

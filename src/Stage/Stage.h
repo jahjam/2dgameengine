@@ -1,6 +1,6 @@
-#ifndef STAGE_H
-#define STAGE_H
-#include "APS.h"
+#pragma once
+
+#include "Director.h"
 #include <SDL2/SDL.h>
 
 #define FPS 60
@@ -28,5 +28,3 @@ public:
   void render();
   void run();
 };
-
-#endif // STAGE_H

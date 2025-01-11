@@ -1,23 +1,42 @@
-#ifndef TRANSFORMPROP_H
-#define TRANSFORMPROP_H
+#pragma once
 
-#include "APS.h"
 #include <glm/ext/vector_float2.hpp>
 
-class TransformProp : public Prop {
-  glm::vec2 position;
-  glm::vec2 scale;
-  double rotation;
+#include "Prop.h"
 
-public:
-  TransformProp(glm::vec2 position = glm::vec2(0, 0),
-                glm::vec2 scale = glm::vec2(1, 1), double rotation = 0) {
-    this->position = position;
-    this->scale = scale;
-    this->rotation = rotation;
-  }
+// TODO: Add constant name to avoid
+// typing errors
+// const std::string
 
-  Prop *clone() const override { return new TransformProp(*this); };
+class TransformProp : public Prop
+{
+   protected:
+    static Name name;
+    static bool initialised;
+
+   public:
+    TransformProp(glm::vec2 position = glm::vec2(0.0, 0.0), glm::vec2 scale = glm::vec2(1.0, 1.0),
+                  double rotation = 0.0)
+    {
+        if (!initialised)
+        {
+            this->name = nameCounter++;
+            initialised = true;
+        }
+
+        this->position = position;
+        this->scale = scale;
+        this->rotation = rotation;
+    }
+
+    Name getName() const override { return this->name; }
+    Prop* clone(void* memory) const override { return new (memory) TransformProp(*this); }
+    size_t getSize() const override { return sizeof(TransformProp); };
+
+    glm::vec2 position;
+    glm::vec2 scale;
+    double rotation;
 };
 
-#endif
+Name TransformProp::name = 0;
+bool TransformProp::initialised = false;

@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Enable the generation of compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-#add_custom_target(link_compile_commands ALL
-#    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-#    ${CMAKE_BINARY_DIR}/compile_commands.json
-#    ${CMAKE_SOURCE_DIR}/compile_commands.json
-#    DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
-#    COMMENT "Copying compile_commands.json to the project root"
-#)
+add_custom_target(link_compile_commands ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_BINARY_DIR}/compile_commands.json
+    ${CMAKE_SOURCE_DIR}/compile_commands.json
+    DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
+    COMMENT "Copying compile_commands.json to the project root"
+)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
@@ -25,6 +25,7 @@ add_subdirectory(src/Stage)
 add_subdirectory(src/Scripts)
 add_subdirectory(src/Props)
 add_subdirectory(src/APS)
+add_subdirectory(src/Arena)
 
 add_executable(2dgameengine src/Main.cpp)
 
@@ -60,6 +61,7 @@ target_link_libraries(2dgameengine PRIVATE
   Scripts
   Props
   APS
+  Arena
 )
 
 

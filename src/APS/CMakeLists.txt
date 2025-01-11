@@ -1,6 +1,18 @@
-add_library(APS APS.h APS.cpp APS.tpp)
+add_library(APS 
+            APS.h 
+            Actor.h 
+            Actor.cpp 
+            Prop.h 
+            Prop.cpp
+            Script.h
+            Script.cpp
+            Store.h
+            Store.cpp
+            Director.h
+            Director.cpp
+          )
 
-target_link_libraries(APS PUBLIC EasyLogging)
+target_link_libraries(APS PUBLIC EasyLogging Arena)
 
 target_include_directories(APS PUBLIC 
   ${CMAKE_CURRENT_SOURCE_DIR}

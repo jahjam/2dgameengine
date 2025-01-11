@@ -1,4 +1,4 @@
-add_library(Scripts MovementScript.h)
+add_library(Scripts MovementScript.h RenderScript.h)
 
 target_link_libraries(Scripts PUBLIC EasyLogging APS)
 
