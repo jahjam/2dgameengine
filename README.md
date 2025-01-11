@@ -31,7 +31,7 @@ run: `./bin/2dgameengine`
 Just playing around on linux at the moment and this is the barebones way to build/run this engine.\
 I will expand on it over time (or that's the plan, at least) \
 
-TODOS: \
+TODOS:
 
 - Come up with a better way to assign Props their unique names
   as currently it's bloating the individual prop classes
