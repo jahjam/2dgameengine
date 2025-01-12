@@ -33,8 +33,6 @@ I will expand on it over time (or that's the plan, at least) \
 
 TODOS:
 
-- Come up with a better way to assign Props their unique names
-  as currently it's bloating the individual prop classes
 - Make the scripts map in Director take strings as the key
   and then you can pass constants instead of passing a class
 - Create the constant names for each Prop class within each class
