@@ -12,7 +12,7 @@ add_library(APS
             Director.cpp
           )
 
-target_link_libraries(APS PUBLIC EasyLogging Arena)
+target_link_libraries(APS PUBLIC EasyLogging Arena Utils)
 
 target_include_directories(APS PUBLIC 
   ${CMAKE_CURRENT_SOURCE_DIR}

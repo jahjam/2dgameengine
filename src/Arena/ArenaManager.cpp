@@ -23,8 +23,8 @@ Prop *ArenaManager::allocateProp(const Prop &prop)
 
 void ArenaManager::deallocateProp(Prop *prop)
 {
-    prop->~Prop();
-    this->toDestroy.push_back({prop, sizeof(Prop)});
+    size_t size = prop->getSize();
+    this->toDestroy.push_back({prop, sizeof(size)});
 };
 
 void ArenaManager::cleanUp()

@@ -25,6 +25,7 @@ find_package(SDL2_mixer REQUIRED)
 find_package(glm REQUIRED)
 
 add_subdirectory(libs/easyloggingpp)
+add_subdirectory(libs/utils)
 add_subdirectory(src/Stage)
 add_subdirectory(src/Scripts)
 add_subdirectory(src/Props)
@@ -61,6 +62,7 @@ target_link_libraries(2dgameengine PRIVATE
   SDL2_mixer
   glm
   EasyLogging 
+  Utils
   Stage
   Scripts
   Props
