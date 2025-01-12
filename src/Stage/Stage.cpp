@@ -13,12 +13,14 @@ Stage::Stage()
 {
     this->isRunning = false;
     this->director = new Director();
+    this->assetStore = new AssetStore(this->renderer);
     LOG(INFO) << "Game constructor called";
 }
 
 Stage::~Stage()
 {
     delete this->director;
+    delete this->assetStore;
     LOG(INFO) << "Game destructor called";
 }
 
@@ -61,7 +63,8 @@ void Stage::render()
     SDL_SetRenderDrawColor(this->renderer, 21, 21, 21, 255);
     SDL_RenderClear(this->renderer);
 
-    this->director->readScript(this->director->getScript(RenderScript()), this->renderer);
+    this->director->readScript(this->director->getScript(RenderScript()), this->renderer,
+                               this->assetStore);
 
     SDL_RenderPresent(this->renderer);
 }
@@ -83,6 +86,8 @@ void Stage::setup()
     this->director->prepareScript(MovementScript());
     this->director->prepareScript(RenderScript());
 
+    assetStore->addTexture("tank-image", "./assets/images/tank-tiger-right.png");
+
     // Create actors
     Actor *tank = this->director->hireActor();
     Actor *truck = this->director->hireActor();
@@ -92,14 +97,14 @@ void Stage::setup()
                              TransformProp(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0),
                              tank->getName());
     this->director->giveProp("RigidBodyProp", RigidBodyProp(glm::vec2(30.0, 0.0)), tank->getName());
-    this->director->giveProp("SpriteProp", SpriteProp(), tank->getName());
-
-    this->director->giveProp("TransformProp",
-                             TransformProp(glm::vec2(30.0, 10.0), glm::vec2(2.0, 2.0), 0.0),
-                             truck->getName());
-    this->director->giveProp("RigidBodyProp", RigidBodyProp(glm::vec2(10.0, 0.0)),
-                             truck->getName());
-    this->director->giveProp("SpriteProp", SpriteProp(), truck->getName());
+    this->director->giveProp("SpriteProp", SpriteProp("tank-image", 32.0, 32.0), tank->getName());
+    //
+    //    this->director->giveProp("TransformProp",
+    //                             TransformProp(glm::vec2(30.0, 10.0), glm::vec2(2.0, 2.0), 0.0),
+    //                             truck->getName());
+    //    this->director->giveProp("RigidBodyProp", RigidBodyProp(glm::vec2(10.0, 0.0)),
+    //                             truck->getName());
+    //    this->director->giveProp("SpriteProp", SpriteProp(), truck->getName());
 }
 
 void Stage::update()

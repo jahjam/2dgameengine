@@ -142,9 +142,9 @@ void Director::readScript(Script &script, double deltaTime)
     script.giveDirections(&this->propStores, deltaTime);
 }
 
-void Director::readScript(Script &script, SDL_Renderer *renderer)
+void Director::readScript(Script &script, SDL_Renderer *renderer, AssetStore *assetStore)
 {
-    script.giveDirections(&this->propStores, renderer);
+    script.giveDirections(&this->propStores, renderer, assetStore);
 }
 
 void Director::cleanUp() const { this->manager->cleanUp(); }

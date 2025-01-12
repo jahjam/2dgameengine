@@ -27,6 +27,7 @@ find_package(glm REQUIRED)
 add_subdirectory(libs/easyloggingpp)
 add_subdirectory(libs/utils)
 add_subdirectory(src/Stage)
+add_subdirectory(src/AssetStore)
 add_subdirectory(src/Scripts)
 add_subdirectory(src/Props)
 add_subdirectory(src/APS)
@@ -48,6 +49,7 @@ set_target_properties(2dgameengine PROPERTIES
 target_include_directories(2dgameengine PRIVATE 
   EasyLogging 
   ${CMAKE_CURRENT_SOURCE_DIR}/src
+  ${CMAKE_CURRENT_SOURCE_DIR}/assets
   ${SDL2_INCLUDE_DIRS}
   ${SDL2_IMAGE_INCLUDE_DIRS}
   ${SDL2_TTF_INCLUDE_DIRS}
@@ -68,6 +70,7 @@ target_link_libraries(2dgameengine PRIVATE
   Props
   APS
   Arena
+  AssetStore
 )
 
 

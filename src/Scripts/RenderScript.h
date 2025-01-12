@@ -18,7 +18,7 @@ class RenderScript : public Script
     }
 
     void giveDirections(std::unordered_map<std::string, IStore *> *propStores,
-                        SDL_Renderer *renderer) override
+                        SDL_Renderer *renderer, AssetStore *assetStore) override
     {
         for (auto actor : this->getScriptActors())
         {
@@ -41,13 +41,15 @@ class RenderScript : public Script
                 LOG(FATAL) << "Casting has failed!";
             }
 
-            SDL_Rect objRect = {static_cast<int>(transformProp->position.x),
-                                static_cast<int>(transformProp->position.y),
-                                static_cast<int>(spriteProp->width),
-                                static_cast<int>(spriteProp->height)};
+            SDL_Rect srcRect = spriteProp->srcRect;
 
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            SDL_RenderFillRect(renderer, &objRect);
+            SDL_Rect dstRect = {static_cast<int>(transformProp->position.x),
+                                static_cast<int>(transformProp->position.y),
+                                static_cast<int>(spriteProp->width * transformProp->scale.x),
+                                static_cast<int>(spriteProp->height * transformProp->scale.y)};
+
+            SDL_RenderCopyEx(renderer, assetStore->getTexture(spriteProp->assetId), &srcRect,
+                             &dstRect, transformProp->rotation, NULL, SDL_FLIP_NONE);
         }
     }
 

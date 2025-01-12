@@ -53,7 +53,7 @@ class Director
     bool hasScript(const Script &script) const;
     Script &getScript(const Script &script) const;
     void readScript(Script &script, double deltaTime);
-    void readScript(Script &script, SDL_Renderer *renderer);
+    void readScript(Script &script, SDL_Renderer *renderer, AssetStore *AssetStore);
 
     void addActorToScript(Actor *actor);
 

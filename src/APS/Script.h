@@ -7,6 +7,7 @@
 
 #include "APS.h"
 #include "Actor.h"
+#include "AssetStore.h"
 #include "Prop.h"
 #include "Store.h"
 
@@ -30,7 +31,7 @@ class Script
     virtual void giveDirections(std::unordered_map<std::string, IStore *> *propStores,
                                 double deltaTime) {};
     virtual void giveDirections(std::unordered_map<std::string, IStore *> *propStores,
-                                SDL_Renderer *renderer) {};
+                                SDL_Renderer *renderer, AssetStore *assetStore) {};
     virtual Script *clone() const = 0;
     // To use a script an actor must have
     // specific props and those are set/required
