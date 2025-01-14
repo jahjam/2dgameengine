@@ -6,17 +6,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Enable the generation of compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# No idea if this is needed but my neovim 
-# never works unless it's included 
-# TODO: needs to figure out why neovim 
-# needs this
-add_custom_target(link_compile_commands ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${CMAKE_BINARY_DIR}/compile_commands.json
-    ${CMAKE_SOURCE_DIR}/compile_commands.json
-    DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
-    COMMENT "Copying compile_commands.json to the project root"
-)
+
+#add_custom_target(link_compile_commands ALL
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#    ${CMAKE_BINARY_DIR}/compile_commands.json
+#    ${CMAKE_SOURCE_DIR}/compile_commands.json
+#    DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
+#    COMMENT "Copying compile_commands.json to the project root"
+#)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
@@ -34,6 +31,17 @@ add_subdirectory(src/APS)
 add_subdirectory(src/Arena)
 
 add_executable(2dgameengine src/Main.cpp)
+
+
+# Path to the assets directory
+set(ASSETS_DIR "${CMAKE_SOURCE_DIR}/assets")
+
+# Ensure the assets directory is copied to the build directory
+add_custom_command(
+    TARGET 2dgameengine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${ASSETS_DIR} ${CMAKE_BINARY_DIR}/assets
+)
 
 # this sets specific paths where things happen
 # 1)  one is where to place the final executable

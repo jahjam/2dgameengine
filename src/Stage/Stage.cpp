@@ -13,7 +13,6 @@ Stage::Stage()
 {
     this->isRunning = false;
     this->director = new Director();
-    this->assetStore = new AssetStore(this->renderer);
     LOG(INFO) << "Game constructor called";
 }
 
@@ -46,6 +45,8 @@ void Stage::initialise()
         LOG(ERROR) << "Error creating SDL renderer";
         return;
     }
+
+    this->assetStore = new AssetStore(this->renderer);
     // SDL_SetWindowFullscreen(this->window, SDL_WINDOW_FULLSCREEN);
 
     this->isRunning = true;

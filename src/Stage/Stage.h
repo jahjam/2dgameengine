@@ -21,7 +21,7 @@ class Stage
     Director *director;
     AssetStore *assetStore;
 
-   public:
+public:
     Stage();
     ~Stage();
     void initialise();

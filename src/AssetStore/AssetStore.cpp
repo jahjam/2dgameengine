@@ -28,14 +28,12 @@ void AssetStore::clearAssets()
 
 void AssetStore::addTexture(const std::string& assetId, const std::string& filePath)
 {
-    SDL_Surface* surface = IMG_Load(filePath.c_str());
+    SDL_Texture* texture = IMG_LoadTexture(this->renderer, filePath.c_str());
 
-    if (!surface) {
-        LOG(ERROR) << "Surface failed to load, something might be wrong with the file path";
+    if (!texture)
+    {
+        LOG(ERROR) << "Texture/IMG error:" << IMG_GetError();
     }
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(this->renderer, surface);
-    SDL_FreeSurface(surface);
 
     this->textures.emplace(assetId, texture);
 };

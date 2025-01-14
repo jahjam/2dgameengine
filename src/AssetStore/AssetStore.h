@@ -13,10 +13,11 @@ class AssetStore
     // TODO: create a map for audio
 
    public:
-    AssetStore(SDL_Renderer* renderer);
-    ~AssetStore();
+       AssetStore() = delete;
+       AssetStore(SDL_Renderer* renderer);
+       ~AssetStore();
 
-    void clearAssets();
-    void addTexture(const std::string& assetId, const std::string& filePath);
-    SDL_Texture* getTexture(const std::string& assetId) const;
+       void clearAssets();
+       void addTexture(const std::string& assetId, const std::string& filePath);
+       SDL_Texture* getTexture(const std::string& assetId) const;
 };
