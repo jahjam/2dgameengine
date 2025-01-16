@@ -39,3 +39,4 @@ TODOS:
   like: string TRANSFORM_CLASS = "TransformClass" to avoid
   typing mistakes
 - Not handling cleaning up the prop stores, need to sort that
+- append member methods and variables with 'm' instead of using 'this'
