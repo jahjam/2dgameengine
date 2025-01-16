@@ -41,15 +41,27 @@ class RenderScript : public Script
                 LOG(FATAL) << "Casting has failed!";
             }
 
+            SDL_Texture *texture = assetStore->getTexture(spriteProp->assetId);
             SDL_Rect srcRect = spriteProp->srcRect;
+
+            if (srcRect.w == 0 && srcRect.h == 0)
+            {
+                // get the height and width without having to pass it in explicitly
+                SDL_QueryTexture(texture, NULL, NULL, &srcRect.w, &srcRect.h);
+            }
+
+            // if you've not specified h and w for a sprite, it'll be calculated
+            // in srcRect in the above function, so use that instead
+            auto spriteWidth = spriteProp->width ? spriteProp->width : srcRect.w;
+            auto spriteHeight = spriteProp->height ? spriteProp->height : srcRect.h;
 
             SDL_Rect dstRect = {static_cast<int>(transformProp->position.x),
                                 static_cast<int>(transformProp->position.y),
-                                static_cast<int>(spriteProp->width * transformProp->scale.x),
-                                static_cast<int>(spriteProp->height * transformProp->scale.y)};
+                                static_cast<int>(spriteWidth * transformProp->scale.x),
+                                static_cast<int>(spriteHeight * transformProp->scale.y)};
 
-            SDL_RenderCopyEx(renderer, assetStore->getTexture(spriteProp->assetId), &srcRect,
-                             &dstRect, transformProp->rotation, NULL, SDL_FLIP_NONE);
+            SDL_RenderCopyEx(renderer, texture, &srcRect, &dstRect, transformProp->rotation, NULL,
+                             SDL_FLIP_NONE);
         }
     }
 

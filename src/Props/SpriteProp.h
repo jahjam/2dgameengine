@@ -6,7 +6,7 @@
 
 struct SpriteProp : public Prop
 {
-    SpriteProp(std::string assetId = "", float width = 10.0, float height = 10.0, int srcRectX = 0,
+    SpriteProp(std::string assetId = "", float width = 0.0, float height = 0.0, int srcRectX = 0,
                int srcRectY = 0)
         : Prop(typeid(SpriteProp)),
           height(height),

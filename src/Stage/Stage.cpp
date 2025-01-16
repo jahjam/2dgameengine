@@ -87,25 +87,18 @@ void Stage::setup()
     this->director->prepareScript(MovementScript());
     this->director->prepareScript(RenderScript());
 
-    assetStore->addTexture("tank-image", "./assets/images/tank-tiger-right.png");
+    this->assetStore->addTexture("tank-image", "./assets/images/tank-tiger-right.png");
 
     // Create actors
-    Actor *tank = this->director->hireActor();
-    Actor *truck = this->director->hireActor();
+    Name tank = this->director->hireActor()->getName();
+    TransformProp tankTransform = TransformProp(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
+    RigidBodyProp tankRigidBody = RigidBodyProp(glm::vec2(30.0, 0.0));
+    SpriteProp tankSprite = SpriteProp("tank-image");
 
     // Give actors props
-    this->director->giveProp("TransformProp",
-                             TransformProp(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0),
-                             tank->getName());
-    this->director->giveProp("RigidBodyProp", RigidBodyProp(glm::vec2(30.0, 0.0)), tank->getName());
-    this->director->giveProp("SpriteProp", SpriteProp("tank-image", 32.0, 32.0), tank->getName());
-    //
-    //    this->director->giveProp("TransformProp",
-    //                             TransformProp(glm::vec2(30.0, 10.0), glm::vec2(2.0, 2.0), 0.0),
-    //                             truck->getName());
-    //    this->director->giveProp("RigidBodyProp", RigidBodyProp(glm::vec2(10.0, 0.0)),
-    //                             truck->getName());
-    //    this->director->giveProp("SpriteProp", SpriteProp(), truck->getName());
+    this->director->giveProp("TransformProp", tankTransform, tank);
+    this->director->giveProp("RigidBodyProp", tankRigidBody, tank);
+    this->director->giveProp("SpriteProp", tankSprite, tank);
 }
 
 void Stage::update()
