@@ -11,121 +11,132 @@
 
 Stage::Stage()
 {
-    this->isRunning = false;
-    this->director = new Director();
+    isRunning_ = false;
+    director_ = new Director();
     LOG(INFO) << "Game constructor called";
 }
 
 Stage::~Stage()
 {
-    delete this->director;
-    delete this->assetStore;
+    delete director_;
+    delete assetStore_;
     LOG(INFO) << "Game destructor called";
 }
 
-void Stage::initialise()
+void Stage::initialise_()
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         LOG(ERROR) << "Error initialising SDL";
         return;
     }
-    this->window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 500,
-                                    SDL_WINDOW_BORDERLESS);
-    if (!this->window)
+    window_ = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 500,
+                               SDL_WINDOW_BORDERLESS);
+    if (!window_)
     {
         LOG(ERROR) << "Error creating SDL window";
         return;
     }
 
-    this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_PRESENTVSYNC);
+    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_PRESENTVSYNC);
 
-    if (!this->renderer)
+    if (!renderer_)
     {
         LOG(ERROR) << "Error creating SDL renderer";
         return;
     }
 
-    this->assetStore = new AssetStore(this->renderer);
-    // SDL_SetWindowFullscreen(this->window, SDL_WINDOW_FULLSCREEN);
+    assetStore_ = new AssetStore(renderer_);
+    // SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
-    this->isRunning = true;
+    isRunning_ = true;
 }
 
-void Stage::destroy()
+void Stage::destroy_()
 {
-    SDL_DestroyRenderer(this->renderer);
-    SDL_DestroyWindow(this->window);
+    SDL_DestroyRenderer(renderer_);
+    SDL_DestroyWindow(window_);
     SDL_Quit();
 }
 
-void Stage::render()
+void Stage::render_()
 {
-    SDL_SetRenderDrawColor(this->renderer, 21, 21, 21, 255);
-    SDL_RenderClear(this->renderer);
+    SDL_SetRenderDrawColor(renderer_, 21, 21, 21, 255);
+    SDL_RenderClear(renderer_);
 
-    this->director->readScript(this->director->getScript(RenderScript()), this->renderer,
-                               this->assetStore);
+    director_->readScript(director_->getScript(RenderScript()), this->renderer_, assetStore_);
 
-    SDL_RenderPresent(this->renderer);
+    SDL_RenderPresent(renderer_);
 }
 
-void Stage::run()
+void Stage::run_()
 {
-    this->setup();
-    while (this->isRunning)
+    setup_();
+    while (isRunning_)
     {
-        this->processInput();
-        this->update();
-        this->render();
+        processInput_();
+        update_();
+        render_();
     }
 }
 
-void Stage::setup()
+void Stage::loadLevel_(u_int8_t level)
 {
-    // Add the scripts that a required
-    this->director->prepareScript(MovementScript());
-    this->director->prepareScript(RenderScript());
+    // Add the scripts that a required in this level
+    director_->prepareScript(MovementScript());
+    director_->prepareScript(RenderScript());
 
-    this->assetStore->addTexture("tank-image", "./assets/images/tank-tiger-right.png");
+    // Add the tilemap
+    assetStore_->addTexture("tilemap", "./assets/tilemaps/jungle.png");
 
-    // Create actors
-    Name tank = this->director->hireActor()->getName();
+    // Load level file
+    // TODO: this needs to be its own function
+    //
+    // hire actor
+    //
+    // add sprite with x and y relative to tile number
+    // so: 21
+
+    // Create tank actor
+    Name tank = director_->hireActor()->getName();
+    assetStore_->addTexture("tank-image", "./assets/images/tank-tiger-right.png");
     TransformProp tankTransform = TransformProp(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
     RigidBodyProp tankRigidBody = RigidBodyProp(glm::vec2(30.0, 0.0));
     SpriteProp tankSprite = SpriteProp("tank-image");
 
-    // Give actors props
-    this->director->giveProp("TransformProp", tankTransform, tank);
-    this->director->giveProp("RigidBodyProp", tankRigidBody, tank);
-    this->director->giveProp("SpriteProp", tankSprite, tank);
+    // Give props
+    director_->giveProp("TransformProp", tankTransform, tank);
+    director_->giveProp("RigidBodyProp", tankRigidBody, tank);
+    director_->giveProp("SpriteProp", tankSprite, tank);
 }
 
-void Stage::update()
+void Stage::setup_() { loadLevel_(1); }
+
+void Stage::update_()
 {
-    int timeToWait = MS_PER_FRAME - (SDL_GetTicks() - this->msPreviousFrame);
+    int timeToWait = MS_PER_FRAME - (SDL_GetTicks() - msPreviousFrame_);
     if (timeToWait > 0 && timeToWait <= MS_PER_FRAME)
     {
         SDL_Delay(timeToWait);
     }
 
-    double deltaTime = (SDL_GetTicks() - this->msPreviousFrame) / 1000.0f;
+    double deltaTime = (SDL_GetTicks() - msPreviousFrame_) / 1000.0f;
 
-    msPreviousFrame = SDL_GetTicks();
+    msPreviousFrame_ = SDL_GetTicks();
 
     // read all scripts
-    this->director->readScript(this->director->getScript(MovementScript()), deltaTime);
+    director_->readScript(director_->getScript(MovementScript()), deltaTime);
 
     // take everything and direct
-    this->director->direct();
+    director_->direct();
 
     // this cleans up the memory allocated
     // in the arena that has been freed
     // anytime within the current frame
-    this->director->cleanUp();
+    director_->cleanUp();
 }
 
-void Stage::processInput()
+void Stage::processInput_()
 {
     SDL_Event sdlEvent;
     while (SDL_PollEvent(&sdlEvent))
@@ -133,12 +144,12 @@ void Stage::processInput()
         switch (sdlEvent.type)
         {
             case SDL_QUIT:
-                this->isRunning = false;
+                isRunning_ = false;
                 break;
             case SDL_KEYDOWN:
                 if (sdlEvent.key.keysym.sym == SDLK_ESCAPE)
                 {
-                    this->isRunning = false;
+                    isRunning_ = false;
                 }
                 break;
         }

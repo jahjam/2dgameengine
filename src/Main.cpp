@@ -5,13 +5,14 @@
 // and only needs to be used one here
 INITIALIZE_EASYLOGGINGPP
 
-int main(int argc, char *argv[]) {
-  el::Loggers::addFlag(el::LoggingFlag::ColoredTerminalOutput);
-  Stage stage;
+int main(int argc, char *argv[])
+{
+    el::Loggers::addFlag(el::LoggingFlag::ColoredTerminalOutput);
+    Stage stage;
 
-  stage.initialise();
-  stage.run();
-  stage.destroy();
+    stage.initialise_();
+    stage.run_();
+    stage.destroy_();
 
-  return 0;
+    return 0;
 }

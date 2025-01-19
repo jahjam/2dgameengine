@@ -13,22 +13,23 @@
 class Stage
 {
    private:
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    bool isRunning;
-    int msPreviousFrame = 0;
+    SDL_Window *window_;
+    SDL_Renderer *renderer_;
+    bool isRunning_;
+    int msPreviousFrame_ = 0;
 
-    Director *director;
-    AssetStore *assetStore;
+    Director *director_;
+    AssetStore *assetStore_;
 
-public:
+   public:
     Stage();
     ~Stage();
-    void initialise();
-    void destroy();
-    void processInput();
-    void setup();
-    void update();
-    void render();
-    void run();
+    void initialise_();
+    void destroy_();
+    void processInput_();
+    void setup_();
+    void loadLevel_(u_int8_t level);
+    void update_();
+    void render_();
+    void run_();
 };
