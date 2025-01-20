@@ -20,7 +20,7 @@ bool propHasNoStore(const std::string &propName,
 
 void Director::giveProp(const std::string &propName, const Prop &prop, const Name actorName)
 {
-    Prop *newProp = this->manager->allocateProp(prop);
+    Prop *newProp = this->manager->allocateProp_(prop);
 
     if (propHasNoStore(propName, this->propStores))
     {
@@ -45,7 +45,7 @@ Actor *Director::hireActor()
 {
     Name actorName = this->numActors++;
 
-    Actor *actor = this->manager->allocateActor(Actor(actorName));
+    Actor *actor = this->manager->allocateActor_(Actor(actorName));
 
     this->actorsToBeHired.insert(actor);
 
@@ -74,7 +74,7 @@ void Director::addActorToScript(Actor *actor)
 
     for (auto &script : this->scripts)
     {
-        const auto &scriptPropRequirements = script.second->getScriptRequirements();
+        const auto &scriptPropRequirements = script.second->getScriptRequirements_();
 
         // an actor can have all the props available
         // but a script might just require two
@@ -89,7 +89,7 @@ void Director::addActorToScript(Actor *actor)
 
         if (actorHasRequiredProps)
         {
-            script.second->addActor(actor);
+            script.second->addActor_(actor);
         }
     }
 }
@@ -106,7 +106,7 @@ void Director::removeProp(const std::string &propName, const Name &actorName)
 
     // NOTE: this order is important
     this->actorsProps[actorName].set(prop->getName(), false);
-    this->manager->deallocateProp(prop);
+    this->manager->deallocateProp_(prop);
     propStore->remove(actorName);
 }
 
@@ -117,7 +117,7 @@ bool Director::hasProp(Name &actorName, Name &propName) const
 
 void Director::prepareScript(const Script &script)
 {
-    this->scripts.insert({std::type_index(typeid(script)), script.clone()});
+    this->scripts.insert({std::type_index(typeid(script)), script.clone_()});
 };
 
 void Director::removeScript(const Script &script)
@@ -139,12 +139,12 @@ Script &Director::getScript(const Script &script) const
 
 void Director::readScript(Script &script, double deltaTime)
 {
-    script.giveDirections(&this->propStores, deltaTime);
+    script.giveDirections_(&this->propStores, deltaTime);
 }
 
 void Director::readScript(Script &script, SDL_Renderer *renderer, AssetStore *assetStore)
 {
-    script.giveDirections(&this->propStores, renderer, assetStore);
+    script.giveDirections_(&this->propStores, renderer, assetStore);
 }
 
 void Director::cleanUp() const { this->manager->cleanUp(); }

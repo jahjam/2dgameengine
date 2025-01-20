@@ -1,41 +1,41 @@
 #include "ArenaManager.h"
 
-ArenaManager::~ArenaManager() { delete this->arena; }
+ArenaManager::~ArenaManager() { delete arena_; }
 
-Actor *ArenaManager::allocateActor(const Actor &actor)
+Actor *ArenaManager::allocateActor_(const Actor &actor)
 {
-    void *memory = arena->allocate(sizeof(Actor));
+    void *memory = arena_->allocate_(sizeof(Actor));
     return new (memory) Actor(actor);
 };
 
-void ArenaManager::deallocateActor(Actor *actor)
+void ArenaManager::deallocateActor_(Actor *actor)
 {
     actor->~Actor();
-    this->toDestroy.push_back({actor, sizeof(Actor)});
+    toDestroy_.push_back({actor, sizeof(Actor)});
 };
 
-Prop *ArenaManager::allocateProp(const Prop &prop)
+Prop *ArenaManager::allocateProp_(const Prop &prop)
 {
     size_t size = prop.getSize();
-    void *memory = arena->allocate(size);
+    void *memory = arena_->allocate_(size);
     return prop.clone(memory);
 };
 
-void ArenaManager::deallocateProp(Prop *prop)
+void ArenaManager::deallocateProp_(Prop *prop)
 {
     size_t size = prop->getSize();
-    this->toDestroy.push_back({prop, sizeof(size)});
+    toDestroy_.push_back({prop, sizeof(size)});
 };
 
 void ArenaManager::cleanUp()
 {
-    if (this->toDestroy.empty())
+    if (toDestroy_.empty())
     {
         return;
     }
-    for (Block block : this->toDestroy)
+    for (Block block : toDestroy_)
     {
-        arena->deallocate(block.data, block.size);
+        arena_->deallocate_(block.data, block.size);
     }
-    this->toDestroy.clear();
+    toDestroy_.clear();
 };

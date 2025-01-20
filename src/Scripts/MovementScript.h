@@ -10,14 +10,14 @@ class MovementScript : public Script
    public:
     MovementScript()
     {
-        this->requireProp(TransformProp());
-        this->requireProp(RigidBodyProp());
+        requireProp_(TransformProp());
+        requireProp_(RigidBodyProp());
     }
 
-    void giveDirections(std::unordered_map<std::string, IStore *> *propStores,
-                        double deltaTime) override
+    void giveDirections_(std::unordered_map<std::string, IStore *> *propStores,
+                         double deltaTime) override
     {
-        for (auto actor : this->getScriptActors())
+        for (auto actor : getScriptActors_())
         {
             auto endIt = propStores->end();
             auto tranformIt = propStores->find("TransformProp");
@@ -43,5 +43,5 @@ class MovementScript : public Script
         }
     }
 
-    Script *clone() const override { return new MovementScript(*this); };
+    Script *clone_() const override { return new MovementScript(*this); };
 };

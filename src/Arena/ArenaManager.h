@@ -8,18 +8,18 @@
 
 class ArenaManager
 {
-    Arena *arena;
-    std::vector<Block> toDestroy;
+    Arena *arena_;
+    std::vector<Block> toDestroy_;
 
    public:
     ArenaManager() = default;
-    ArenaManager(Arena &arena) : arena(&arena) {};
+    ArenaManager(Arena &arena) : arena_(&arena) {};
     ~ArenaManager();
 
-    Actor *allocateActor(const Actor &actor);
-    void deallocateActor(Actor *actor);
-    Prop *allocateProp(const Prop &prop);
-    void deallocateProp(Prop *prop);
+    Actor *allocateActor_(const Actor &actor);
+    void deallocateActor_(Actor *actor);
+    Prop *allocateProp_(const Prop &prop);
+    void deallocateProp_(Prop *prop);
 
     void cleanUp();
 };

@@ -5,20 +5,20 @@
 Arena::Arena(size_t size)
 {
     // generic char buffer of memory
-    this->memory = new char[size];
+    memory_ = new char[size];
     // the total size of the whole arena
-    this->totalSize = size;
+    totalSize_ = size;
 
     // initially the whole arena is one block
     // in the list
-    this->freeList.push_back({memory, size});
+    freeList_.push_back({memory_, size});
 };
 
 // if the Arena goes out of scope
 // delete all the memory allocated
-Arena::~Arena() { delete[] this->memory; }
+Arena::~Arena() { delete[] memory_; }
 
-void *Arena::allocate(size_t requestedSize)
+void *Arena::allocate_(size_t requestedSize)
 {
     // here we are iterating through the linked list
     // to find the first block that has enough
@@ -26,7 +26,7 @@ void *Arena::allocate(size_t requestedSize)
     // if [it(block): size = 1024]
     // and [requestedSize = 300]
     // we can use this block of memory
-    for (auto it = this->freeList.begin(); it != this->freeList.end(); it++)
+    for (auto it = freeList_.begin(); it != freeList_.end(); it++)
     {
         if (it->size >= requestedSize)
         {
@@ -49,7 +49,7 @@ void *Arena::allocate(size_t requestedSize)
             {
                 // here we erase the block if there's no
                 // room left in it
-                this->freeList.erase(it);
+                freeList_.erase(it);
             }
 
             // return the original memory block
@@ -67,11 +67,11 @@ void *Arena::allocate(size_t requestedSize)
     throw std::bad_alloc();
 };
 
-void Arena::deallocate(void *ptr, size_t size)
+void Arena::deallocate_(void *ptr, size_t size)
 {
     // this is adding back the memory block
     // to the free list for reuse
-    this->freeList.push_back({ptr, size});
+    freeList_.push_back({ptr, size});
 
     // we sort the list here to put the
     // memory blocks back in order so that
@@ -82,13 +82,13 @@ void Arena::deallocate(void *ptr, size_t size)
     // (this is why it needs to be sorted)
     // ultimately attempting to consolidate everything
     // back into one block
-    this->freeList.sort([](const Block &a, const Block &b) { return a.data < b.data; });
+    freeList_.sort([](const Block &a, const Block &b) { return a.data < b.data; });
 
     // get the first block of memory
-    auto it = this->freeList.begin();
+    auto it = freeList_.begin();
     // as long as the pointer doesn't
     // hit end, keep iterating
-    while (it != this->freeList.end())
+    while (it != freeList_.end())
     {
         // get the next block of memory
         // (we need next in the while loop
@@ -104,13 +104,13 @@ void Arena::deallocate(void *ptr, size_t size)
         // if the size of the first block aligns
         // with the second block, we can consolidate
         // those blocks into one
-        if (next != this->freeList.end() && (char *)(it->data) + it->size == next->data)
+        if (next != freeList_.end() && (char *)(it->data) + it->size == next->data)
         {
             // increate the size of the current block
             // so that it 'consumes' the next block
             it->size += next->size;
             // then erase the next block
-            this->freeList.erase(next);
+            freeList_.erase(next);
         }
         else
         {

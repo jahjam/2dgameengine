@@ -12,13 +12,13 @@ struct Block
 class Arena
 {
    private:
-    char *memory;
-    size_t totalSize;
-    std::list<Block> freeList;
+    char *memory_;
+    size_t totalSize_;
+    std::list<Block> freeList_;
 
    public:
     Arena(size_t size);
     ~Arena();
-    void *allocate(size_t size);
-    void deallocate(void *ptr, size_t size);
+    void *allocate_(size_t size);
+    void deallocate_(void *ptr, size_t size);
 };

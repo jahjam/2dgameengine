@@ -13,14 +13,14 @@ class RenderScript : public Script
    public:
     RenderScript()
     {
-        this->requireProp(TransformProp());
-        this->requireProp(SpriteProp());
+        this->requireProp_(TransformProp());
+        this->requireProp_(SpriteProp());
     }
 
-    void giveDirections(std::unordered_map<std::string, IStore *> *propStores,
-                        SDL_Renderer *renderer, AssetStore *assetStore) override
+    void giveDirections_(std::unordered_map<std::string, IStore *> *propStores,
+                         SDL_Renderer *renderer, AssetStore *assetStore) override
     {
-        for (auto actor : this->getScriptActors())
+        for (auto actor : this->getScriptActors_())
         {
             auto endIt = propStores->end();
             auto tranformIt = propStores->find("TransformProp");
@@ -65,5 +65,5 @@ class RenderScript : public Script
         }
     }
 
-    Script *clone() const override { return new RenderScript(*this); };
+    Script *clone_() const override { return new RenderScript(*this); };
 };
