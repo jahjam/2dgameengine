@@ -129,17 +129,12 @@ void Stage::loadLevel_(u_int8_t level)
             int row = token[0] - '0';
             int column = token[1] - '0';
 
-            // hire actor
             Name tile = director_->hireActor()->getName();
-            // add sprite to tile with x and y relative to tile number
-            SpriteProp tileSprite = SpriteProp("tilemap", 32.0, 32.0, column * 32.0, row * 32.0);
-
-            // add the sprite in the correct position
+            SpriteProp tileSprite = SpriteProp("tilemap", 32.0, 32.0, column * 32.0, row * 32.0, 0);
             TransformProp tileTransform =
                 TransformProp(glm::vec2(xCounter * (tileSize * static_cast<int>(scale)),
                                         yCounter * (tileSize * static_cast<int>(scale))),
                               glm::vec2(scale, scale), 0.0);
-
             director_->giveProp("TransformProp", tileTransform, tile);
             director_->giveProp("SpriteProp", tileSprite, tile);
 
