@@ -21,6 +21,8 @@ class RenderScript : public Script
         this->requireProp_(SpriteProp());
     }
 
+    // this should be moved to the Script level
+    // as it can be useful in ALL scripts
     template <typename T>
     T *getActorProp(std::unordered_map<std::string, IStore *> *propStores, Actor *actor,
                     std::string propName)
