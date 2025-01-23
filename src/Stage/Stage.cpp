@@ -149,13 +149,25 @@ void Stage::loadLevel_(u_int8_t level)
     Name tank = director_->hireActor()->getName();
     assetStore_->addTexture("tank-image", "./assets/images/tank-tiger-right.png");
     TransformProp tankTransform = TransformProp(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
-    RigidBodyProp tankRigidBody = RigidBodyProp(glm::vec2(30.0, 0.0));
+    RigidBodyProp tankRigidBody = RigidBodyProp(glm::vec2(80.0, 0.0));
     SpriteProp tankSprite = SpriteProp("tank-image");
 
     // Give props
     director_->giveProp("TransformProp", tankTransform, tank);
     director_->giveProp("RigidBodyProp", tankRigidBody, tank);
     director_->giveProp("SpriteProp", tankSprite, tank);
+
+    // Create tank actor
+    Name truck = director_->hireActor()->getName();
+    assetStore_->addTexture("truck-image", "./assets/images/truck-ford-left.png");
+    TransformProp truckTransform = TransformProp(glm::vec2(800.0, 29.0), glm::vec2(1.0, 1.0), 0.0);
+    RigidBodyProp truckRigidBody = RigidBodyProp(glm::vec2(-80.0, 0.0));
+    SpriteProp truckSprite = SpriteProp("truck-image");
+
+    // Give props
+    director_->giveProp("TransformProp", truckTransform, truck);
+    director_->giveProp("RigidBodyProp", truckRigidBody, truck);
+    director_->giveProp("SpriteProp", truckSprite, truck);
 }
 
 void Stage::setup_() { loadLevel_(1); }

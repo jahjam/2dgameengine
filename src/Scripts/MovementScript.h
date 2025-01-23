@@ -38,6 +38,11 @@ class MovementScript : public Script
                 LOG(FATAL) << "Casting has failed!";
             }
 
+            // previous position
+            transformProp->previousPosition.x = transformProp->position.x;
+            transformProp->previousPosition.y = transformProp->position.y;
+
+            // new position
             transformProp->position.x += rigidBodyProp->velocity.x * deltaTime;
             transformProp->position.y += rigidBodyProp->velocity.y * deltaTime;
         }

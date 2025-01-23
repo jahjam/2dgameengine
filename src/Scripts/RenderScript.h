@@ -3,6 +3,10 @@
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
 
+#include <map>
+#include <vector>
+
+#include "Actor.h"
 #include "Script.h"
 #include "SpriteProp.h"
 #include "TransformProp.h"
@@ -17,53 +21,110 @@ class RenderScript : public Script
         this->requireProp_(SpriteProp());
     }
 
+    template <typename T>
+    T *getActorProp(std::unordered_map<std::string, IStore *> *propStores, Actor *actor,
+                    std::string propName)
+    {
+        auto endIt = propStores->end();
+        auto propIt = propStores->find(propName);
+
+        if (propIt == endIt)
+        {
+            LOG(FATAL) << "Tried to access a prop that doesn't exist";
+        }
+
+        T *prop = static_cast<T *>(propIt->second->get(actor->getName()));
+
+        if (!prop)
+        {
+            LOG(FATAL) << "Casting has failed!";
+        }
+
+        return prop;
+    }
+
+    void renderActor(std::unordered_map<std::string, IStore *> *propStores, AssetStore *assetStore,
+                     SDL_Renderer *renderer, Actor *actor)
+    {
+        TransformProp *tProp = getActorProp<TransformProp>(propStores, actor, "TransformProp");
+        SpriteProp *sProp = getActorProp<SpriteProp>(propStores, actor, "SpriteProp");
+
+        SDL_Texture *texture = assetStore->getTexture(sProp->assetId);
+        SDL_Rect srcRect = sProp->srcRect;
+
+        if (srcRect.w == 0 && srcRect.h == 0)
+        {
+            // get the height and width without having to pass it in explicitly
+            SDL_QueryTexture(texture, NULL, NULL, &srcRect.w, &srcRect.h);
+        }
+
+        // if you've not specified h and w for a sprite, it'll be calculated
+        // in srcRect in the above function, so use that instead
+        auto spriteWidth = sProp->width ? sProp->width : srcRect.w;
+        auto spriteHeight = sProp->height ? sProp->height : srcRect.h;
+
+        SDL_Rect dstRect = {static_cast<int>(tProp->position.x),
+                            static_cast<int>(tProp->position.y),
+                            static_cast<int>(spriteWidth * tProp->scale.x),
+                            static_cast<int>(spriteHeight * tProp->scale.y)};
+
+        SDL_RenderCopyEx(renderer, texture, &srcRect, &dstRect, tProp->rotation, NULL,
+                         SDL_FLIP_NONE);
+    }
+
     void giveDirections_(std::unordered_map<std::string, IStore *> *propStores,
                          SDL_Renderer *renderer, AssetStore *assetStore) override
     {
+        // sort actors into their yBuckets
         for (auto actor : this->getScriptActors_())
         {
-            auto endIt = propStores->end();
-            auto tranformIt = propStores->find("TransformProp");
-            auto spriteIt = propStores->find("SpriteProp");
+            TransformProp *tProp = getActorProp<TransformProp>(propStores, actor, "TransformProp");
+            SpriteProp *sProp = getActorProp<SpriteProp>(propStores, actor, "SpriteProp");
 
-            if (tranformIt == endIt || spriteIt == endIt)
+            bool actorIsNotTileMap = sProp->z != 0;
+            if (actorIsNotTileMap)
             {
-                LOG(FATAL) << "Tried to access a prop that doesn't exist";
+                float prevYPos = tProp->previousPosition.y;
+                float curYPos = tProp->position.y;
+                auto &yBucket = yBuckets[prevYPos];
+
+                auto it = std::find(yBucket.begin(), yBucket.end(), actor);
+
+                if (it == yBucket.end())
+                {
+                    yBucket.push_back(actor);
+                }
+                else if (prevYPos != curYPos)
+                {
+                    yBucket.erase(std::remove(yBucket.begin(), yBucket.end(), actor),
+                                  yBucket.end());
+
+                    if (yBucket.empty())
+                    {
+                        yBuckets.erase(prevYPos);
+                    }
+
+                    yBuckets[curYPos].push_back(actor);
+                }
             }
-
-            TransformProp *transformProp =
-                static_cast<TransformProp *>(tranformIt->second->get(actor->getName()));
-            SpriteProp *spriteProp =
-                static_cast<SpriteProp *>(spriteIt->second->get(actor->getName()));
-
-            if (!transformProp || !spriteProp)
+            else
             {
-                LOG(FATAL) << "Casting has failed!";
+                renderActor(propStores, assetStore, renderer, actor);
             }
+        }
 
-            SDL_Texture *texture = assetStore->getTexture(spriteProp->assetId);
-            SDL_Rect srcRect = spriteProp->srcRect;
-
-            if (srcRect.w == 0 && srcRect.h == 0)
+        // iterate the actors in the yBuckets
+        // so that they render in correct y order
+        for (auto [y, yBucket] : yBuckets)
+        {
+            for (auto actor : yBucket)
             {
-                // get the height and width without having to pass it in explicitly
-                SDL_QueryTexture(texture, NULL, NULL, &srcRect.w, &srcRect.h);
+                renderActor(propStores, assetStore, renderer, actor);
             }
-
-            // if you've not specified h and w for a sprite, it'll be calculated
-            // in srcRect in the above function, so use that instead
-            auto spriteWidth = spriteProp->width ? spriteProp->width : srcRect.w;
-            auto spriteHeight = spriteProp->height ? spriteProp->height : srcRect.h;
-
-            SDL_Rect dstRect = {static_cast<int>(transformProp->position.x),
-                                static_cast<int>(transformProp->position.y),
-                                static_cast<int>(spriteWidth * transformProp->scale.x),
-                                static_cast<int>(spriteHeight * transformProp->scale.y)};
-
-            SDL_RenderCopyEx(renderer, texture, &srcRect, &dstRect, transformProp->rotation, NULL,
-                             SDL_FLIP_NONE);
         }
     }
 
     Script *clone_() const override { return new RenderScript(*this); };
+
+    std::map<float, std::vector<Actor *>> yBuckets;
 };
