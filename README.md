@@ -33,10 +33,10 @@ I will expand on it over time (or that's the plan, at least) \
 
 TODOS:
 
-- Make the scripts map in Director take strings as the key
-  and then you can pass constants instead of passing a class
-- Create the constant names for each Prop class within each class
-  like: string TRANSFORM_CLASS = "TransformClass" to avoid
-  typing mistakes
-- Not handling cleaning up the prop stores, need to sort that
+- Not using memory arena correctly, should have one arena for entities,
+  an arena for each prop, so 'TransformPropArena', and an arena for each script too
+  this way you're managaging the lifetimes better
+- Anywhere we're using a string as a key in a map, change to a typeid
+  and just pass that typeid as an argument
+- Not handling cleaning up the prop stores, need to sort that with an arena
 - append member methods and variables with 'm' instead of using 'this'
