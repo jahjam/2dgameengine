@@ -10,11 +10,11 @@ class MovementScript : public Script
    public:
     MovementScript()
     {
-        requireProp_(TransformProp());
-        requireProp_(RigidBodyProp());
+        requireProp<TransformProp>();
+        requireProp<RigidBodyProp>();
     }
 
-    void giveDirections_(std::unordered_map<std::string, IStore *> *propStores,
+    void giveDirections_(std::unordered_map<std::string, IStore*>* propStores,
                          double deltaTime) override
     {
         for (auto actor : getScriptActors_())
@@ -28,10 +28,10 @@ class MovementScript : public Script
                 LOG(FATAL) << "Tried to access a prop that doesn't exist";
             }
 
-            TransformProp *transformProp =
-                static_cast<TransformProp *>(tranformIt->second->get(actor->getName()));
-            RigidBodyProp *rigidBodyProp =
-                static_cast<RigidBodyProp *>(rigidBodyIt->second->get(actor->getName()));
+            TransformProp* transformProp =
+                static_cast<TransformProp*>(tranformIt->second->get(actor->getName()));
+            RigidBodyProp* rigidBodyProp =
+                static_cast<RigidBodyProp*>(rigidBodyIt->second->get(actor->getName()));
 
             if (!transformProp || !rigidBodyProp)
             {
@@ -48,5 +48,5 @@ class MovementScript : public Script
         }
     }
 
-    Script *clone_() const override { return new MovementScript(*this); };
+    Script* clone_() const override { return new MovementScript(*this); };
 };

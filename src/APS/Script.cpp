@@ -4,18 +4,19 @@
 
 #include "easylogging++.h"
 
-void Script::requireProp_(const Prop &prop) { scriptRequirements_.set(prop.getName()); }
-
-void Script::addActor_(Actor *actor) { this->actors_.push_back(actor); };
-
-void Script::removeActor_(Actor *actor)
+void Script::addActor_(Actor* actor)
 {
-    auto actorIt = std::find_if(this->actors_.begin(), this->actors_.end(),
-                                [actor](Actor *otherActor) { return *otherActor == *actor; });
+    this->m_actors.push_back(actor);
+};
 
-    if (actorIt != this->actors_.end())
+void Script::removeActor_(Actor* actor)
+{
+    auto actorIt = std::find_if(this->m_actors.begin(), this->m_actors.end(),
+                                [actor](Actor* otherActor) { return *otherActor == *actor; });
+
+    if (actorIt != this->m_actors.end())
     {
-        this->actors_.erase(actorIt);
+        this->m_actors.erase(actorIt);
     }
     else
     {
@@ -23,9 +24,12 @@ void Script::removeActor_(Actor *actor)
     }
 };
 
-const std::vector<Actor *> &Script::getScriptActors_() { return this->actors_; };
-
-const ScriptRequirements &Script::getScriptRequirements_() const
+const std::vector<Actor*>& Script::getScriptActors_()
 {
-    return this->scriptRequirements_;
+    return this->m_actors;
+};
+
+const ScriptRequirements& Script::getScriptRequirements_() const
+{
+    return this->m_scriptRequirements;
 };

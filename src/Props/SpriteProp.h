@@ -1,23 +1,23 @@
 #pragma once
 
 #include <SDL2/SDL_rect.h>
+#include <string>
 
-#include "Prop.h"
-
-struct SpriteProp : public Prop
+struct SpriteProp
 {
-    SpriteProp(std::string assetId = "", float width = 0.0, float height = 0.0, int srcRectX = 0,
-               int srcRectY = 0, u_int16_t z = 1)
-        : Prop(typeid(SpriteProp)),
-          height(height),
-          width(width),
-          assetId(assetId),
-          srcRect({srcRectX, srcRectY, static_cast<int>(width), static_cast<int>(height)}),
-          z(z)
+    SpriteProp(std::string assetId = "",
+               float width = 0.0,
+               float height = 0.0,
+               int srcRectX = 0,
+               int srcRectY = 0,
+               u_int16_t z = 1) :
+        height(height),
+        width(width),
+        assetId(assetId),
+        srcRect({srcRectX, srcRectY, static_cast<int>(width), static_cast<int>(height)}),
+        z(z)
     {
     }
-    Prop* clone(void* memory) const override { return new (memory) SpriteProp(*this); }
-    size_t getSize() const override { return sizeof(SpriteProp); };
 
     float width;
     float height;

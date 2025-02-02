@@ -1,19 +1,15 @@
 #pragma once
 
-#include <typeindex>
-
-#include "APS.h"
-#include "Utils.h"
-
-class Prop
+struct IProp
 {
-   public:
-    Prop(std::type_index type) : name(Utils::generateUniqueName(type)) {};
-    ~Prop() = default;
-    Name getName() const;
-    virtual Prop *clone(void *memory) const { return new (memory) Prop(*this); };
-    virtual size_t getSize() const { return sizeof(Prop); };
+   protected:
+    static int nextName;
+};
 
-private:
-    Name name;
+// Used to assign a unique id to a component type
+template <typename T>
+class Prop : public IProp
+{
+    // Returns the unique id of Component<T>
+    static int getName();
 };

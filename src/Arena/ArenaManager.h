@@ -1,25 +1,27 @@
 #pragma once
 
-#include <vector>
-
-#include "Actor.h"
 #include "Arena.h"
-#include "Prop.h"
 
+struct FreeListNode
+{
+    void* mem;
+    FreeListNode* next;
+};
+
+template <typename T>
 class ArenaManager
 {
-    Arena *arena_;
-    std::vector<Block> toDestroy_;
+   private:
+    FreeListNode* _freeListNode;
+    Arena<T> _arena;
+    size_t _size;
 
    public:
-    ArenaManager() = default;
-    ArenaManager(Arena &arena) : arena_(&arena) {};
-    ~ArenaManager();
+    ArenaManager() : _arena(Arena<T>()), _freeListNode(nullptr), _size(sizeof(T)) {}
+    ~ArenaManager() { _clearFreeList(); };
 
-    Actor *allocateActor_(const Actor &actor);
-    void deallocateActor_(Actor *actor);
-    Prop *allocateProp_(const Prop &prop);
-    void deallocateProp_(Prop *prop);
-
-    void cleanUp();
+    void* _allocate();
+    void* _deallocate(void* ptr);
+    void _clearFreeList() const;
+    void _clearFreeListAndArena() const;
 };

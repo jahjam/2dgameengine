@@ -1,37 +1,33 @@
 #pragma once
 
-#include <cstddef>
 #include <vector>
+#include "APS.h"
 
-#include "Prop.h"
-
-// is this needed?
 class IStore
 {
    public:
-    virtual ~IStore() = 0;
-    virtual size_t getSize() = 0;
-    virtual void resize(size_t num) = 0;
-    virtual void add(Prop *prop, const Name &actorName) = 0;
-    virtual void remove(const Name &actorName) = 0;
-    virtual Prop *get(Name actorName) = 0;
-    virtual Prop *operator[](size_t i) = 0;
+    virtual ~IStore() {}
 };
 
+template <typename T>
 class Store : public IStore
 {
    private:
-    // raw byte buffer
-    std::vector<Prop *> propVarients;
+    std::vector<T> m_propVarients;
 
    public:
-    Store(size_t size = 100) : propVarients(size) {}
-    ~Store() override = default;
-    size_t getSize() override;
-    void resize(size_t num) override;
-    void add(Prop *prop, const Name &actorName) override;
-    void remove(const Name &actorName) override;
-    Prop *get(Name actorName) override;
+    Store(size_t size = 100);
 
-    Prop *operator[](size_t i) override { return propVarients[i]; };
+    virtual ~Store() = default;
+
+    bool isEmpty() const;
+    int getSize() const;
+    void resize(size_t n);
+    void clear();
+    void add(T prop, Name& actorName);
+    void remove(const Name& actorName);
+    void set(size_t index, T object);
+    T& get(size_t index);
+
+    T& operator[](unsigned int index);
 };

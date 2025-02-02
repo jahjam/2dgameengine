@@ -1,7 +1,7 @@
 add_library(Arena Arena.h 
-                  Arena.cpp 
+                  Arena.tpp 
                   ArenaManager.h 
-                  ArenaManager.cpp
+                  ArenaManager.tpp
                 )
 
 target_link_libraries(Arena PUBLIC APS EasyLogging)

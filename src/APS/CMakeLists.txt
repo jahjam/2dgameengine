@@ -3,13 +3,15 @@ add_library(APS
             Actor.h 
             Actor.cpp 
             Prop.h 
-            Prop.cpp
+            Prop.tpp
             Script.h
             Script.cpp
+            Script.tpp
             Store.h
-            Store.cpp
+            Store.tpp
             Director.h
             Director.cpp
+            Director.tpp
           )
 
           target_link_libraries(APS PUBLIC EasyLogging Arena Utils AssetStore)

@@ -2,50 +2,19 @@
 
 #include <SDL2/SDL_render.h>
 
-#include "easylogging++.h"
+#include "APS.h"
+#include "Actor.h"
 
-Director::Director()
-{
-    Arena *arena = new Arena(MAX_GAME_MEMORY);
-    this->manager = new ArenaManager(*arena);
-}
+Director::Director() : m_actorManager(ArenaManager<Actor>()) {}
 
-Director::~Director() { delete this->manager; }
+Director::~Director() {}
 
-bool propHasNoStore(const std::string &propName,
-                    std::unordered_map<std::string, IStore *> &propStores)
-{
-    return propStores.find(propName) == propStores.end();
-};
-
-void Director::giveProp(const std::string &propName, const Prop &prop, const Name actorName)
-{
-    Prop *newProp = this->manager->allocateProp_(prop);
-
-    if (propHasNoStore(propName, this->propStores))
-    {
-        // NOTE: this should probably be managed by the arena
-        // but currently not
-        Store *newPropStore = new Store();
-        this->propStores[propName] = newPropStore;
-    }
-
-    IStore *propStore = this->propStores[propName];
-
-    if (actorName >= propStore->getSize())
-    {
-        propStore->resize(this->numActors);
-    }
-
-    propStore->add(newProp, actorName);
-    this->actorsProps[actorName].set(prop.getName());
-}
-
-Actor *Director::hireActor()
+Actor* Director::hireActor()
 {
     Name actorName = this->numActors++;
 
-    Actor *actor = this->manager->allocateActor_(Actor(actorName));
+    void* actorMem = m_actorManager._allocate();
+    Actor* actor = new (actorMem) Actor(actorName);
 
     this->actorsToBeHired.insert(actor);
 
@@ -59,22 +28,22 @@ Actor *Director::hireActor()
 
 void Director::direct()
 {
-    for (auto *actor : this->actorsToBeHired)
+    for (auto* actor : this->actorsToBeHired)
     {
         this->addActorToScript(actor);
     }
     this->actorsToBeHired.clear();
 }
 
-void Director::addActorToScript(Actor *actor)
+void Director::addActorToScript(Actor* actor)
 {
     const auto actorName = actor->getName();
 
-    const auto &actorsCurProps = this->actorsProps[actorName];
+    const auto& actorsCurProps = this->actorsProps[actorName];
 
-    for (auto &script : this->scripts)
+    for (auto& script : this->m_scripts)
     {
-        const auto &scriptPropRequirements = script.second->getScriptRequirements_();
+        const auto& scriptPropRequirements = script.second->getScriptRequirements_();
 
         // an actor can have all the props available
         // but a script might just require two
@@ -94,57 +63,7 @@ void Director::addActorToScript(Actor *actor)
     }
 }
 
-void Director::removeProp(const std::string &propName, const Name &actorName)
+void Director::cleanUp() const
 {
-    if (propHasNoStore(propName, this->propStores))
-    {
-        return;
-    }
-
-    IStore *propStore = this->propStores[propName];
-    Prop *prop = propStore->get(actorName);
-
-    // NOTE: this order is important
-    this->actorsProps[actorName].set(prop->getName(), false);
-    this->manager->deallocateProp_(prop);
-    propStore->remove(actorName);
+    m_actorManager._clearFreeListAndArena();
 }
-
-bool Director::hasProp(Name &actorName, Name &propName) const
-{
-    return this->actorsProps[actorName].test(propName);
-}
-
-void Director::prepareScript(const Script &script)
-{
-    this->scripts.insert({std::type_index(typeid(script)), script.clone_()});
-};
-
-void Director::removeScript(const Script &script)
-{
-    delete this->scripts[std::type_index(typeid(script))];
-    this->scripts.erase(std::type_index(typeid(script)));
-};
-
-bool Director::hasScript(const Script &script) const
-{
-    return this->scripts.find(std::type_index(typeid(script))) != this->scripts.end();
-};
-
-Script &Director::getScript(const Script &script) const
-{
-    auto foundScript = this->scripts.find(std::type_index(typeid(script)));
-    return *foundScript->second;
-};
-
-void Director::readScript(Script &script, double deltaTime)
-{
-    script.giveDirections_(&this->propStores, deltaTime);
-}
-
-void Director::readScript(Script &script, SDL_Renderer *renderer, AssetStore *assetStore)
-{
-    script.giveDirections_(&this->propStores, renderer, assetStore);
-}
-
-void Director::cleanUp() const { this->manager->cleanUp(); }

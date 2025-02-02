@@ -4,7 +4,6 @@
 
 #include <cstddef>
 #include <set>
-#include <string>
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
@@ -21,41 +20,47 @@ class Director
 
     // Each store contains all the varients of a certain prop type
     // ie:
-    // [key = propName string], [value = IStore *prop]
-    std::unordered_map<std::string, IStore *> propStores;
+    // [index = prop name], [value = IStore *prop]
+    std::vector<IStore*> propStores;
 
     // The ScriptRequirements let us know which props an actor possesses
     // [vector index = actorName]
     std::vector<ScriptRequirements> actorsProps;
 
-    std::unordered_map<std::type_index, Script *> scripts;
+    std::unordered_map<std::type_index, Script*> m_scripts;
 
-    std::set<Actor *> actorsToBeHired;
-    std::set<Actor *> actorsToBeFired;
+    std::set<Actor*> actorsToBeHired;
+    std::set<Actor*> actorsToBeFired;
 
-    ArenaManager *manager;
+    ArenaManager<Actor> m_actorManager;
 
    public:
     Director();
     ~Director();
 
-    Actor *hireActor();
+    Actor* hireActor();
     void direct();
-
-    // Prop management
-    void giveProp(const std::string &propName, const Prop &prop, const Name actorName);
-    void removeProp(const std::string &propName, const Name &actorName);
-    bool hasProp(Name &actorName, Name &propName) const;
-
-    // Script management
-    void prepareScript(const Script &script);
-    void removeScript(const Script &script);
-    bool hasScript(const Script &script) const;
-    Script &getScript(const Script &script) const;
-    void readScript(Script &script, double deltaTime);
-    void readScript(Script &script, SDL_Renderer *renderer, AssetStore *AssetStore);
-
-    void addActorToScript(Actor *actor);
-
+    void addActorToScript(Actor* actor);
     void cleanUp() const;
+
+    template <typename T, typename... TArgs>
+    void giveProp(Arena<T>& propArena,
+                  Arena<Store<T>>& storeArena,
+                  const Name actorName,
+                  TArgs&&... args);
+    template <typename T>
+    void removeProp(Arena<T>& propArena, Name actorName);
+    template <typename T>
+    bool hasProp(Name& actorName) const;
+    template <typename T>
+    T& getProp(Name& actorName) const;
+
+    template <typename T, typename... TArgs>
+    void addScript(Arena<T>& scriptArena, TArgs&&... args);
+    template <typename T>
+    void removeScript(Arena<T>& scriptArena);
+    template <typename T>
+    bool hasScript() const;
+    template <typename T>
+    T& getScript() const;
 };

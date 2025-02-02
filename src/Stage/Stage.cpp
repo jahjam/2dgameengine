@@ -99,6 +99,7 @@ void Stage::loadLevel_(u_int8_t level)
     float scale = 2.0;
 
     // Add the scripts that a required in this level
+    Script* movementScript = new MovementScript;
     director_->prepareScript(MovementScript());
     director_->prepareScript(RenderScript());
 
@@ -170,7 +171,10 @@ void Stage::loadLevel_(u_int8_t level)
     director_->giveProp("SpriteProp", truckSprite, truck);
 }
 
-void Stage::setup_() { loadLevel_(1); }
+void Stage::setup_()
+{
+    loadLevel_(1);
+}
 
 void Stage::update_()
 {
