@@ -9,9 +9,11 @@ struct TransformProp
                   double rotation = 0.0) :
         position(position), scale(scale), rotation(rotation)
     {
+        previousPosition = position;
     }
 
     glm::vec2 position;
+    glm::vec2 previousPosition;
     glm::vec2 scale;
     double rotation;
 };
